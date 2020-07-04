@@ -16,7 +16,7 @@ module SteadyState
       def steady_state(attr_name, predicates: true, scopes: SteadyState.active_record?(self), &block) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/LineLength
         overrides = Module.new do
           define_method :"validate_#{attr_name}_transition_to" do |next_value|
-            if public_send(attr_name).may_become?(next_value)
+            if public_send(attr_name).may_become?(next_value) || public_send(attr_name) == next_value
               remove_instance_variable("@last_valid_#{attr_name}") if instance_variable_defined?("@last_valid_#{attr_name}")
             elsif !instance_variable_defined?("@last_valid_#{attr_name}")
               instance_variable_set("@last_valid_#{attr_name}", public_send(attr_name))
